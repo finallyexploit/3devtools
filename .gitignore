@@ -10,3 +10,10 @@
 phnt.zip
 nl(0x412a0000).uninit.bin.rar
 "@ | Out-File -FilePath .gitignore -Encoding UTF8
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
