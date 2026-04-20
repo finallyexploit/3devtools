@@ -1,0 +1,39 @@
+3DEVTOOLS/
+│
+├── .vs/
+│   ├── 3devtools/
+│   ├── ProjectSettings.json
+│   ├── slnx.sqlite
+│   └── VSWorkspaceState.json
+│
+├── debugger/
+│   ├── backup.py
+│   ├── debugger.py
+│   └── state.txt
+│
+├── goddev_cpp/
+│   ├── clientside_srv/
+│   ├── csm_x3da/
+│   └── loader_srv/
+│
+├── mysql_bd/
+│   ├── loader_srv.sql
+│   └── main_web.sql
+│
+├── mysql_syncdef/
+│   ├── main.sql
+│   └── remove_inserts.py
+│
+├── web/
+│    ├── backend
+│        └── index.html
+│    ├── frontend
+│        └── main.css
+│    ├── php
+│       └── index.php
+├── .gitignore
+├── 3dev1huinya.cpp
+├── 123.text
+├── drevo.txt
+├── README.md
+└── test.txt

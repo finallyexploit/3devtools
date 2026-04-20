@@ -1,0 +1,24 @@
+SAFE UPDATE SUMMARY
+
+What changed
+- Added SecurityModule.cs as a separate security layer.
+- Removed anti-debug and anti-analysis logic.
+- Simplified ApiService.cs.
+- Removed legacy console entry from build.
+- Added remembered username setting.
+- Added persistent theme and language settings.
+- Added startup checks, audit log, protected local store, launch path policy, session journal, and login attempt limiter.
+- Added UI actions: Copy info, Open logs, Install folder.
+- Added security status panel.
+
+Key files
+- SecurityModule.cs
+- MainWindow.xaml
+- MainWindow.xaml.cs
+- ApiService.cs
+- loader_goddev.csproj
+
+Notes
+- Program.cs is kept only as a harmless placeholder and is excluded from build.
+- Optional integrity manifest support is present in SecurityModule.cs.
+- No anti-debug, anti-analysis, or reverse-engineering bypass logic is included.

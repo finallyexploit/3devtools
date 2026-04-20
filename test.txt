@@ -1,0 +1,13 @@
+git add .
+git commit -m ""   
+git push
+git pull
+py debugger.py
+pip install discord.py requests
+Yaboba burmalda
+123FASFAF
+git add .
+git commit -m "php&js&tilewind has been uptated"
+git push
+
+

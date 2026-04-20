@@ -1,0 +1,12 @@
+@"
+*.vs/
+*.ipch
+*.db
+*.bin
+*.rar
+*.zip
+**/obj/
+**/bin/
+phnt.zip
+nl(0x412a0000).uninit.bin.rar
+"@ | Out-File -FilePath .gitignore -Encoding UTF8

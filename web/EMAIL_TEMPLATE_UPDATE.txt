@@ -1,0 +1,6 @@
+This build updates only the password reset email design.
+
+Important:
+- mail_config.php is intentionally not included
+- keep your current working SMTP config on the server
+- safest update: replace api.php only

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "parser by hauntz",
+    "description": "Powerful script explorer and executor",
+    "download_url": "https://soulware.space/scripts/parser.lua",
+    "author": "Dex",
+    "version": "2.0"
+  },
+  {
+    "name": "Infinite Yield",
+    "description": "Admin command script with 500+ commands",
+    "download_url": "https://soulware.space/scripts/infinite_yield.lua",
+    "author": "Edge",
+    "version": "3.5"
+  },
+  {
+    "name": "Dark Hub",
+    "description": "Multi-game script hub",
+    "download_url": "https://soulware.space/scripts/dark_hub.lua",
+    "author": "Dark",
+    "version": "1.8"
+  }
+]

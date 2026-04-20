@@ -1,0 +1,60 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /api/
+
+	# Rewrite all non-file/non-directory requests to index.php
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ index.php [L]
+</IfModule>
+
+# Protect config and .htaccess (works on Apache 2.4 and 2.2)
+<Files "config.php">
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Deny from all
+	</IfModule>
+</Files>
+
+<Files ".htaccess">
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Deny from all
+	</IfModule>
+</Files>
+
+# Allow access to data file types (do NOT use <Directory> in .htaccess)
+<FilesMatch "\.(bin|png|pem)$">
+	<IfModule mod_authz_core.c>
+		Require all granted
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+		Allow from all
+	</IfModule>
+</FilesMatch>
+
+# MIME types
+<IfModule mod_mime.c>
+	AddType application/octet-stream .bin
+	AddType image/png .png
+	AddType text/plain .pem
+</IfModule>
+
+# Caching
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresByType image/png "access plus 1 month"
+	ExpiresByType application/octet-stream "access plus 1 week"
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+	AddOutputFilterByType DEFLATE application/json
+	AddOutputFilterByType DEFLATE application/javascript
+	AddOutputFilterByType DEFLATE text/html
+</IfModule>

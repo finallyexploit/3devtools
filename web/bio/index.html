@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#040404" />
+  <title>HAUNTZ</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./assets/style.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="./assets/app.js"></script>
+</head>
+<body>
+  <canvas id="veil"></canvas>
+
+  <div class="page">
+    <header class="topbar reveal">
+      <div class="clock-wrap">
+        <span id="clock" class="clock">00:00:00</span>
+        <span id="zone" class="zone">GMT+00</span>
+      </div>
+
+      <div class="lang-switch" aria-label="Language switch">
+        <button class="lang-btn is-active" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ua">UA</button>
+      </div>
+    </header>
+
+    <main class="hero-grid">
+      <section class="hero reveal">
+        <div class="title-wrap">
+          <h1 class="title-solid" data-i18n="titleLead">HAUNTZ</h1>
+          <div class="title-ghost" data-i18n="titleGhost">Z</div>
+        </div>
+
+        <div class="role" data-i18n="role">cybersec / developer</div>
+        <p class="lead" data-i18n="intro"></p>
+        <p class="sub" data-i18n="subIntro"></p>
+
+        <div id="stack" class="stack"></div>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://t.me/hauntz1337" target="_blank" rel="noreferrer" data-i18n="cta">Написать в Telegram</a>
+          <button class="btn btn-ghost" id="copy-discord" data-i18n="copyDiscord">Скопировать Discord</button>
+          <a class="btn btn-ghost" href="https://github.com/sky7ovecoder" target="_blank" rel="noreferrer" data-i18n="githubBtn">GitHub</a>
+        </div>
+
+        <div class="stats">
+          <div class="stat-box">
+            <span class="stat-label" data-i18n="views">Просмотры</span>
+            <strong id="views">0</strong>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label" data-i18n="age">Возраст</span>
+            <strong>15</strong>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label" data-i18n="projects">Проекты</span>
+            <strong>5</strong>
+          </div>
+        </div>
+      </section>
+
+      <aside class="sidebar reveal">
+        <article class="card contact-card telegram-card">
+          <div class="card-head">
+            <span class="card-label" data-i18n="telegram">Telegram</span>
+            <span class="card-badge" data-i18n="mainContact">main</span>
+          </div>
+          <div class="contact-main">
+            <div class="avatar avatar-tg"><img class="avatar-img" src="./assets/tg-avatar.jpg" alt="Telegram avatar" width="68" height="68" /></div>
+            <div>
+              <div class="contact-name">@hauntz1337</div>
+              <div class="contact-sub" data-i18n="tgNote">Быстрее всего отвечаю тут</div>
+            </div>
+          </div>
+          <a class="inline-link" href="https://t.me/hauntz1337" target="_blank" rel="noreferrer" data-i18n="openTelegram">Открыть Telegram</a>
+        </article>
+
+        <article class="card contact-card discord-card">
+          <div class="card-head">
+            <span class="card-label">Discord</span>
+            <span class="card-badge" data-i18n="secondContact">contact</span>
+          </div>
+          <div class="contact-main">
+            <div class="avatar avatar-ds"><img class="avatar-img" src="./assets/ds-avatar.jpg" alt="Discord avatar" width="68" height="68" /></div>
+            <div>
+              <div class="contact-name">hauntz.adm</div>
+              <div class="contact-sub" data-i18n="dsNote">Можно написать или добавить</div>
+            </div>
+          </div>
+          <button class="inline-link ghost-inline" id="copy-discord-inline" data-i18n="copyDiscord">Скопировать Discord</button>
+        </article>
+      </aside>
+    </main>
+
+    <section class="faq reveal">
+      <div class="faq-tag">FAQ</div>
+      <div id="faq-list" class="faq-list"></div>
+    </section>
+
+    <footer class="footer reveal">
+      <a href="https://t.me/hauntz1337" target="_blank" rel="noreferrer">telegram: @hauntz1337</a>
+      <span>discord: hauntz.adm</span>
+      <a href="https://github.com/sky7ovecoder" target="_blank" rel="noreferrer">github: sky7ovecoder</a>
+    </footer>
+  </div>
+</body>
+</html>

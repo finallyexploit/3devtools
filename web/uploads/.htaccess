@@ -1,0 +1,9 @@
+Options -Indexes
+<FilesMatch "\.(php|phtml|phar|cgi|pl|py|jsp|asp|aspx|sh)$">
+  Require all denied
+</FilesMatch>
+AddType text/plain .php .phtml .phar .cgi .pl .py .jsp .asp .aspx .sh
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Content-Security-Policy "default-src 'none'; img-src 'self' data: blob:; style-src 'none'; script-src 'none'; sandbox"
+</IfModule>
