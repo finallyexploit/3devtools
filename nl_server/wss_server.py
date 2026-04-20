@@ -1,26 +1,4 @@
 #!/usr/bin/env python3
-"""
-Neverlose WSS Server - Port 30030
-
-Handles the WebSocket protocol used by GetSerial (vtable slot 1) and fn3 (vtable slot 3).
-
-Protocol (probed from crack server at 145.239.80.134:30030, 2026-02-22):
-  1. Client connects via WSS (TLS)
-  2. Server waits for client's FIRST message (any content, even empty string)
-  3. Server responds with 3 frames:
-     - Text: Auth JSON {"Type":"Auth","Message":"...","Data":"..."}
-     - Binary: 385,360-byte encrypted module blob
-     - Binary: 80-byte encrypted key blob
-  4. Server does NOT respond to any subsequent messages
-     (types 0-9 all timeout on the crack server)
-
-  The crack server is purely a payload delivery system — it does not process
-  auth, serial, or data requests. Those are handled by our Requestor.cpp hooks.
-
-Usage:
-  nix-shell -p "python3.withPackages (ps: [ps.websockets])" openssl --run "python3 server/wss_server.py"
-"""
-
 import asyncio
 import ssl
 import json
@@ -29,6 +7,7 @@ import sys
 import logging
 import time
 import ipaddress
+import subprocess
 from pathlib import Path
 
 try:
@@ -51,22 +30,25 @@ KEY_FILE = Path(__file__).parent / "key.pem"
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
 log = logging.getLogger("wss")
 
-# Load payloads at startup
-# Вместо чтения из файла
-# Вместо заглушки — читаем оригинальный ЗАШИФРОВАННЫЙ module.bin
 MODULE_BLOB = (DATA_DIR / "module.bin").read_bytes()
 KEY_BLOB = (DATA_DIR / "key.bin").read_bytes()
 
 assert len(MODULE_BLOB) == 385360, f"module.bin size: {len(MODULE_BLOB)}"
 assert len(KEY_BLOB) == 80, f"key.bin size: {len(KEY_BLOB)}"
 
-# Message log for analysis
 MSG_LOG = []
 
+def notify_telegram(text):
+    try:
+        subprocess.Popen(['python3', '/opt/telegram_bot/tg_notify.py', text], 
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception as e:
+        log.error(f"Telegram notify failed: {e}")
 
 async def handle_client(ws):
     addr = ws.remote_address
     log.info(f"[+] Connection from {addr[0]}:{addr[1]}")
+ #   notify_telegram(f"Connection | IP: {addr[0]}:{addr[1]}")
     msg_num = 0
 
     try:
@@ -80,14 +62,19 @@ async def handle_client(ws):
         else:
             log.info(f"  [C->S] #{msg_num} binary ({len(first_msg)}B): {first_msg[:32].hex()}")
             MSG_LOG.append({"dir": "C->S", "type": "binary", "size": len(first_msg), "hex": first_msg[:64].hex(), "time": timestamp})
+
         auth = json.dumps({"Type": "Auth", "Message": AUTH_MESSAGE, "Data": AUTH_DATA})
         await ws.send(auth)
         log.info(f"  [S->C] Auth JSON ({len(auth)}B): {auth}")
+
         await ws.send(MODULE_BLOB)
         log.info(f"  [S->C] Module blob ({len(MODULE_BLOB):,}B)")
+
         await ws.send(KEY_BLOB)
         log.info(f"  [S->C] Key blob ({len(KEY_BLOB)}B): {KEY_BLOB.hex()}")
+
         log.info(f"  [S->C] All 3 frames sent, listening for client messages...")
+
         async for msg in ws:
             timestamp = time.time()
             msg_num += 1
@@ -101,11 +88,12 @@ async def handle_client(ws):
 
     except websockets.ConnectionClosed as e:
         log.info(f"  [!] Connection closed: code={e.code} reason={e.reason}")
+       # notify_telegram(f"Disconnected | IP: {addr[0]}:{addr[1]} | {e.reason}")
     except Exception as e:
         log.error(f"  [!] Error: {e}")
+        #notify_telegram(f"Error | IP: {addr[0]}:{addr[1]} | {str(e)[:100]}")
 
     log.info(f"[-] Disconnected {addr[0]}:{addr[1]} (total messages: {msg_num})")
-
 
 def generate_cert():
     if CERT_FILE.exists() and KEY_FILE.exists():
@@ -134,8 +122,6 @@ def generate_cert():
         KEY_FILE.write_bytes(key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.TraditionalOpenSSL, serialization.NoEncryption()))
         CERT_FILE.write_bytes(cert.public_bytes(serialization.Encoding.PEM))
     except ImportError:
-        import subprocess
-        import tempfile
         ret = os.system(
             f'openssl req -x509 -newkey rsa:2048 -keyout "{KEY_FILE}" -out "{CERT_FILE}" '
             f'-days 365 -nodes -subj "/CN=127.0.0.1" 2>/dev/null'
@@ -144,7 +130,6 @@ def generate_cert():
             print("Failed to generate TLS certificate.")
             print("Install the 'cryptography' package: pip install cryptography")
             sys.exit(1)
-
 
 async def main():
     generate_cert()
@@ -161,6 +146,7 @@ async def main():
         ping_interval=None,
     ):
         log.info(f"Neverlose WSS server on wss://{HOST}:{PORT}/")
+        notify_telegram(f"WSS Server Started | IP: 94.156.114.58 | Port: {PORT}")
         log.info(f"  Auth Message: {AUTH_MESSAGE}")
         log.info(f"  Auth Data:    {AUTH_DATA}")
         log.info(f"  Module blob:  {len(MODULE_BLOB):,} bytes")
@@ -173,10 +159,9 @@ async def main():
         log.info("  4. Server ignores all subsequent messages")
         log.info("")
         log.info("Update setup_hooks.cpp getaddrinfo hook to point here:")
-        log.info('  *ppNodeName = "127.0.0.1";')
+        log.info('  *ppNodeName = "94.156.114.58";')
         log.info('  *ppServiceName = "30030";')
         await asyncio.Future()
-
 
 if __name__ == "__main__":
     asyncio.run(main())
